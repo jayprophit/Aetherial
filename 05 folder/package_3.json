@@ -1,0 +1,57 @@
+{
+  "name": "unified-platform",
+  "version": "1.0.0",
+  "description": "A comprehensive platform combining social networking, e-commerce, e-learning, and job marketplace features with advanced AI capabilities",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd private/src/frontend && next dev",
+    "build": "cd private/src/frontend && next build",
+    "start": "cd private/src/frontend && next start",
+    "lint": "cd private/src/frontend && next lint",
+    "test": "jest",
+    "server": "node private/src/backend/server.js",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
+    "build:production": "bash create-production-package.sh"
+  },
+  "keywords": [
+    "social",
+    "ecommerce",
+    "elearning",
+    "jobs",
+    "ai",
+    "platform"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.7.2",
+    "aws-sdk": "^2.1450.0",
+    "stripe": "^13.4.0",
+    "nodemailer": "^6.9.4",
+    "joi": "^17.10.0",
+    "winston": "^3.10.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "express-rate-limit": "^6.9.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.4",
+    "supertest": "^6.3.3",
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.1",
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1"
+  }
+}
