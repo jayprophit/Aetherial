@@ -1,0 +1,471 @@
+# Auto-Generated Security Rules for Unified Platform Repository
+# Generated on: 2025-01-13
+# Security Level: COSMIC_TOP_SECRET
+
+# ============================================================================
+# PRIVATE FOLDER SECURITY - UNRESTRICTED DEV ACCESS ONLY
+# ============================================================================
+
+# Private source code (restricted access)
+private/src/**/*.py
+private/src/**/*.js
+private/src/**/*.ts
+private/src/**/*.cpp
+private/src/**/*.c
+private/src/**/*.h
+private/src/**/*.hpp
+private/src/**/*.java
+private/src/**/*.go
+private/src/**/*.rs
+private/src/**/*.swift
+private/src/**/*.kt
+
+# Credentials and secrets (NEVER COMMIT)
+private/credentials/
+private/credentials/**/*
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+*.truststore
+**/secrets.json
+**/config.secret.*
+**/credentials.*
+**/auth_tokens.*
+**/api_keys.*
+**/private_keys.*
+**/ssh_keys.*
+**/gpg_keys.*
+
+# Environment variables with secrets
+.env
+.env.*
+.environment
+**/.env
+**/.env.*
+
+# Database credentials
+**/database.conf
+**/db_config.*
+**/connection_strings.*
+**/database_passwords.*
+
+# Cloud provider credentials
+**/aws_credentials
+**/azure_credentials
+**/gcp_credentials
+**/.aws/
+**/.azure/
+**/.gcp/
+
+# Blockchain private keys
+**/blockchain_keys/
+**/wallet_private_keys/
+**/smart_contract_keys/
+**/consensus_keys/
+
+# Quantum encryption keys
+**/quantum_keys/
+**/quantum_certificates/
+**/quantum_signatures/
+
+# Biometric authentication data
+**/biometric_templates/
+**/retinal_scans/
+**/fingerprint_data/
+**/dna_sequences/
+**/brainwave_patterns/
+
+# AI model weights and training data
+**/model_weights/
+**/training_data/
+**/neural_network_weights/
+**/quantum_model_states/
+
+# ============================================================================
+# BUSINESS FOLDER SECURITY - B2B INTEGRATIONS
+# ============================================================================
+
+# Business partner credentials
+business/partner_credentials/
+business/api_integrations/secrets/
+business/enterprise_keys/
+business/b2b_certificates/
+
+# Financial data
+business/financial_records/
+business/transaction_logs/
+business/payment_credentials/
+business/banking_details/
+
+# Legal documents (sensitive)
+business/contracts/confidential/
+business/legal/nda/
+business/intellectual_property/patents/
+business/trade_secrets/
+
+# ============================================================================
+# ORGANISATION FOLDER SECURITY - ENTERPRISE WORKFLOWS
+# ============================================================================
+
+# HR and employee data
+organisation/hr_records/
+organisation/employee_data/
+organisation/payroll_information/
+organisation/performance_reviews/
+organisation/personal_information/
+
+# Internal communications
+organisation/internal_memos/confidential/
+organisation/board_meetings/
+organisation/strategic_plans/
+organisation/merger_acquisition/
+
+# Organizational secrets
+organisation/org_charts/sensitive/
+organisation/budget_planning/
+organisation/competitive_intelligence/
+
+# ============================================================================
+# GOVERNMENT FOLDER SECURITY - COMPLIANCE/AUDITS
+# ============================================================================
+
+# Government compliance data
+government/compliance_reports/classified/
+government/audit_trails/sensitive/
+government/regulatory_submissions/confidential/
+government/security_clearances/
+
+# Legal compliance
+government/gdpr_data/
+government/hipaa_records/
+government/sox_compliance/
+government/pci_dss_data/
+
+# Security audits
+government/penetration_test_results/
+government/vulnerability_assessments/
+government/security_incident_reports/
+government/forensic_analysis/
+
+# ============================================================================
+# SERVER FOLDER SECURITY - BACKEND INFRASTRUCTURE
+# ============================================================================
+
+# Server configurations
+server/production_configs/
+server/staging_configs/
+server/database_configs/
+server/load_balancer_configs/
+
+# SSL/TLS certificates
+server/ssl_certificates/
+server/tls_keys/
+server/ca_certificates/
+server/certificate_chains/
+
+# Monitoring and logging
+server/log_files/
+server/monitoring_data/
+server/performance_metrics/
+server/security_logs/
+
+# Backup and recovery
+server/backup_encryption_keys/
+server/disaster_recovery_plans/
+server/failover_configurations/
+
+# ============================================================================
+# GENERAL SECURITY EXCLUSIONS
+# ============================================================================
+
+# Operating system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE and editor files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.cache
+*.pid
+*.lock
+*.sock
+
+# Build artifacts
+build/
+dist/
+target/
+bin/
+obj/
+out/
+*.o
+*.so
+*.dll
+*.exe
+*.app
+*.deb
+*.rpm
+*.msi
+
+# Package manager files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+Pipfile.lock
+poetry.lock
+composer.lock
+Gemfile.lock
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+virtualenv/
+.virtualenv/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.accdb
+
+# Compressed files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+
+# Media files (large)
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+*.wma
+
+# Image files (large)
+*.psd
+*.ai
+*.eps
+*.tiff
+*.tif
+*.raw
+*.cr2
+*.nef
+*.orf
+*.sr2
+
+# Document files (potentially sensitive)
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+*.rtf
+*.odt
+*.ods
+*.odp
+
+# ============================================================================
+# QUANTUM COMPUTING SECURITY
+# ============================================================================
+
+# Quantum algorithms
+**/quantum_algorithms/proprietary/
+**/quantum_circuits/classified/
+**/quantum_states/sensitive/
+**/quantum_entanglement_data/
+
+# Quantum cryptography
+**/quantum_crypto_keys/
+**/quantum_random_seeds/
+**/quantum_signatures/private/
+**/quantum_certificates/
+
+# ============================================================================
+# AI/ML SECURITY
+# ============================================================================
+
+# Training data
+**/training_datasets/proprietary/
+**/model_checkpoints/
+**/neural_weights/
+**/ai_model_states/
+
+# AI research
+**/research_data/confidential/
+**/experiment_results/sensitive/
+**/ai_algorithms/proprietary/
+**/machine_learning_models/private/
+
+# ============================================================================
+# BLOCKCHAIN SECURITY
+# ============================================================================
+
+# Blockchain data
+**/blockchain_data/private/
+**/smart_contracts/proprietary/
+**/consensus_algorithms/classified/
+**/mining_configurations/
+
+# Cryptocurrency
+**/wallet_files/
+**/private_keys/
+**/seed_phrases/
+**/transaction_histories/private/
+
+# ============================================================================
+# BIOMETRIC SECURITY
+# ============================================================================
+
+# Biometric templates
+**/biometric_templates/
+**/facial_recognition_data/
+**/voice_prints/
+**/behavioral_patterns/
+
+# Medical data
+**/health_records/
+**/genetic_data/
+**/medical_imaging/
+**/diagnostic_results/
+
+# ============================================================================
+# COMMUNICATION SECURITY
+# ============================================================================
+
+# Communication logs
+**/call_logs/
+**/message_histories/
+**/email_archives/
+**/video_call_recordings/
+
+# Network security
+**/network_configurations/
+**/firewall_rules/
+**/vpn_configurations/
+**/proxy_settings/
+
+# ============================================================================
+# RESEARCH AND DEVELOPMENT SECURITY
+# ============================================================================
+
+# R&D data
+**/research_proposals/confidential/
+**/patent_applications/draft/
+**/trade_secrets/
+**/competitive_analysis/
+
+# Experimental data
+**/lab_results/
+**/prototype_designs/
+**/test_data/sensitive/
+**/benchmark_results/proprietary/
+
+# ============================================================================
+# PLATFORM SPECIFIC EXCLUSIONS
+# ============================================================================
+
+# Unified Platform specific
+**/platform_secrets/
+**/integration_keys/
+**/service_tokens/
+**/webhook_secrets/
+
+# Deployment configurations
+**/production_env/
+**/staging_env/
+**/development_env/
+**/testing_env/
+
+# Monitoring and analytics
+**/analytics_data/
+**/user_behavior_data/
+**/performance_data/
+**/error_reports/sensitive/
+
+# ============================================================================
+# COMPLIANCE AND LEGAL
+# ============================================================================
+
+# Legal documents
+**/legal_documents/confidential/
+**/compliance_reports/sensitive/
+**/audit_results/
+**/regulatory_filings/
+
+# Privacy data
+**/user_personal_data/
+**/gdpr_requests/
+**/privacy_impact_assessments/
+**/data_processing_records/
+
+# ============================================================================
+# EMERGENCY SECURITY PROTOCOLS
+# ============================================================================
+
+# Emergency access
+**/emergency_access_codes/
+**/disaster_recovery_keys/
+**/emergency_contacts/
+**/incident_response_plans/classified/
+
+# Forensic data
+**/forensic_images/
+**/evidence_files/
+**/investigation_data/
+**/security_incident_logs/
+
+# ============================================================================
+# END OF AUTO-GENERATED SECURITY RULES
+# ============================================================================
+
+# Custom exclusions (add below this line)
+# Add any additional project-specific exclusions here
+
+# Note: This .gitignore file is automatically generated and updated
+# based on security protocols and compliance requirements.
+# Manual modifications should be made with extreme caution.
+# Last updated: 2025-01-13T00:00:00Z
+# Security classification: COSMIC_TOP_SECRET
+# Review required: Every 30 days
+# Next review date: 2025-02-12T00:00:00Z
+

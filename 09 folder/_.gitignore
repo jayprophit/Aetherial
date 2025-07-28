@@ -1,0 +1,305 @@
+# Unified Platform - Comprehensive .gitignore with Security Rules
+
+# ================================
+# SECURITY - CRITICAL FILES
+# ================================
+# Never commit these files - they contain sensitive information
+private/credentials/**
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+*.truststore
+**/secrets/**
+**/secret.*
+**/.env*
+**/.secret*
+**/config/production.*
+**/config/staging.*
+**/passwords.*
+**/tokens.*
+**/api-keys.*
+**/database-credentials.*
+**/ssh-keys/**
+**/ssl-certificates/**
+
+# ================================
+# PRIVATE FOLDER RESTRICTIONS
+# ================================
+# Private folder should only be accessible to developers
+private/src/core/**/*.key
+private/src/core/**/*.secret
+private/debugging/sensitive-logs/**
+private/internal-tools/admin-tools/**
+private/sandbox/experimental/**
+
+# ================================
+# GOVERNMENT FOLDER RESTRICTIONS
+# ================================
+# Government folder contains classified information
+government/compliance-audit/classified/**
+government/data-management/sensitive/**
+government/secure-applications/top-secret/**
+government/**/*.classified
+government/**/*.restricted
+government/**/*.confidential
+
+# ================================
+# BUSINESS FOLDER RESTRICTIONS
+# ================================
+# Business folder contains proprietary information
+business/integrations/proprietary/**
+business/api-docs/internal/**
+business/b2b-components/licensed/**
+business/**/*.proprietary
+business/**/*.licensed
+
+# ================================
+# SERVER FOLDER RESTRICTIONS
+# ================================
+# Server folder contains infrastructure secrets
+server/database/production-configs/**
+server/authentication/jwt-secrets/**
+server/infrastructure/deployment-keys/**
+server/**/*.production
+server/**/*.staging
+
+# ================================
+# DEVELOPMENT FILES
+# ================================
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ================================
+# DEPENDENCY DIRECTORIES
+# ================================
+node_modules/
+venv/
+env/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ================================
+# BUILD AND DISTRIBUTION
+# ================================
+build/
+dist/
+*.egg-info/
+.eggs/
+.coverage
+.pytest_cache/
+.tox/
+.cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ================================
+# LOGS AND TEMPORARY FILES
+# ================================
+*.log
+logs/
+temp/
+tmp/
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+
+# ================================
+# DATABASE FILES
+# ================================
+*.db
+*.sqlite
+*.sqlite3
+database/backups/**
+database/dumps/**
+database/migrations/sensitive/**
+
+# ================================
+# BLOCKCHAIN AND CRYPTO
+# ================================
+blockchain/wallets/**
+blockchain/private-keys/**
+blockchain/mnemonics/**
+crypto/keys/**
+crypto/wallets/**
+*.wallet
+*.mnemonic
+
+# ================================
+# AI AND ML MODELS
+# ================================
+models/proprietary/**
+models/trained/**/*.pkl
+models/trained/**/*.h5
+models/trained/**/*.pt
+ai/training-data/sensitive/**
+ml/datasets/private/**
+
+# ================================
+# MEDIA AND ASSETS
+# ================================
+# Large media files that shouldn't be in git
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mkv
+*.m4v
+*.3gp
+*.3g2
+*.mj2
+*.asf
+*.rm
+*.rmvb
+*.divx
+*.xvid
+
+# Large audio files
+*.wav
+*.flac
+*.aac
+*.ogg
+*.wma
+*.m4a
+*.opus
+
+# Large image files (keep small ones for UI)
+assets/images/high-res/**
+assets/videos/**
+assets/audio/**
+public/assets/large-media/**
+
+# ================================
+# DOCUMENTATION DRAFTS
+# ================================
+docs/drafts/**
+docs/internal/**
+docs/confidential/**
+*.draft.md
+*.internal.md
+*.confidential.md
+
+# ================================
+# TESTING AND DEBUGGING
+# ================================
+tests/fixtures/sensitive/**
+tests/data/private/**
+debugging/crash-dumps/**
+debugging/memory-dumps/**
+debugging/sensitive-logs/**
+*.dump
+*.crash
+*.core
+
+# ================================
+# DEPLOYMENT AND INFRASTRUCTURE
+# ================================
+deployment/production/**
+deployment/staging/**
+infrastructure/terraform/state/**
+infrastructure/kubernetes/secrets/**
+infrastructure/docker/production/**
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# ================================
+# MONITORING AND ANALYTICS
+# ================================
+monitoring/sensitive-metrics/**
+analytics/user-data/**
+analytics/private-reports/**
+metrics/confidential/**
+
+# ================================
+# BACKUP FILES
+# ================================
+backups/**
+*.backup
+*.bak
+*.old
+*.orig
+*.save
+
+# ================================
+# PLATFORM-SPECIFIC
+# ================================
+# Windows
+*.exe
+*.msi
+*.dll
+*.sys
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Linux
+*.so
+*.a
+*.la
+*.lo
+
+# ================================
+# CUSTOM PLATFORM FILES
+# ================================
+# Unified Platform specific files
+platform/user-data/**
+platform/private-configs/**
+platform/enterprise-configs/**
+social-media/api-tokens/**
+iot-manufacturing/device-configs/**
+blockchain-funding/wallet-configs/**
+rd-laboratory/research-data/private/**
+specialized-fields/proprietary-data/**
+
+# ================================
+# SECURITY SCAN RESULTS
+# ================================
+security-scans/**
+vulnerability-reports/**
+penetration-test-results/**
+*.security-report
+*.vulnerability-scan
+
+# ================================
+# COMPLIANCE AND AUDIT
+# ================================
+compliance/audit-logs/sensitive/**
+compliance/reports/confidential/**
+audit-trails/classified/**
+regulatory/private-reports/**
+
+# ================================
+# END OF SECURITY RULES
+# ================================
+
+# This .gitignore file is automatically generated and maintained
+# DO NOT manually edit security-related entries
+# Contact security team for modifications to sensitive file patterns
+
