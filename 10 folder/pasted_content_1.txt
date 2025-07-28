@@ -1,0 +1,283 @@
+Sifdat web site 
+Location - International
+
+Built in to a cloud and into a virtual box
+
+AI & ML this is to help run the website, help with services, e-learning, e-commerce, content creation,  blogging, cv builder, uploading data to blockchain.  Job search matching, business listing, advertisement, points system and disturbution
+
+E-commerce - you can buy and sell products.  (Like amazon, eBay, Alibaba, AliExpress, wish, shoppify, gumtree etc)(Drop shipping /reselling)(products have links to e-learn courses to learn about how the product works, materials, patents, electronics, CAD, History, etc and the science behind it)
+
+E-learn join a class to learn, upload learning material for students to learn from (free & paid courses)(some courses are linked to products on e-commerce)
+Course chat rooms
+Uploads/Downloads course material
+Certificates will be added to a cv and uploaded to the blockchain
+
+CV builder helps you to build create and maintain an accurate ‘curriculum vita’ which is uploaded to the blockchain.  Candidates can opt in or out of job search.  The cv will help the job. Search to locate candidates for the job. Based on geolocation and job specifications and requirements.  
+
+The job search is based off the nearest candidate with the applicable data that matches the job requirement.  The employer and employee can change the job location as a custom search requirement
+
+E.g.
+Location: continent, country, region, state, borough, area, street, road
+Job specifications: work with a team of developers, working along side a production manager
+Role: Senior Full stack developer
+Qualifications required: Skills
+Pay: £50-80,000 p/y
+Position: full time/ part time/ contract/ temporary/ volunteer
+
+
+6 April by Metamindz UK
+
+* 		£50,000 - £80,000 per annum
+* 		London
+* 		Permanent, full-time
+* 		Work from home
+* 		 Skills:  AWS, React  + 5 more
+
+Metamindz is a fast-growing UK-based IT software company. We help by providing fractional CTOs as-a-service, building digital products, hiring technical talent, and conducting tech due diligence.
+We’re looking for a Senior Full Stack Developer with strong frontend and backend experience to join one of our most visionary clients — an early-stage startup on a mission to preserve legacies for the next 500 years. They’re building an AI-powered storytelling platform that turns people’s memories into eBooks, audiobooks, and even movies.
+
+Tech Stack: Frontend: Next.js, React.js, Tailwind CSS Backend: NestJS, Prisma, PostgreSQL Infra & Tools: Azure, GitHub Nice to Have: LLMs, Prompt Engineering, AI experience
+Key Requirements
+* 4.5+ years experience with React.js and 2+ years with Next.js
+* 1+ year experience with Tailwind CSS
+* 1+ year experience with NestJS and Prisma
+* Strong PostgreSQL knowledge
+* Experience with Azure and familiarity with cloud deployment
+* Experience in early-stage startups with a bias for ownership and speed
+* Based in or willing to work hybrid in London (1-2 days/week)
+Responsibilities:
+* Build and maintain frontend and backend features using Next.js, NestJS, and Prisma
+* Collaborate closely with product and design teams to deliver seamless user experiences
+* Ensure system scalability, security, and performance
+* Write clean, maintainable, and well-documented code
+* Stay on top of trends in AI, LLMs, and modern web architecture
+What We Offer:
+* A chance to build a product that preserves human legacies for generations
+* High-impact role — contribute directly to shaping the future of a meaningful platform
+* Work with a technical CTO and a dynamic, international team
+* Hybrid setup with flexible working hours and minimal office days
+* Competitive salary 
+* A respectful, results-oriented culture that values curiosity over long hours
+
+Skills
+
+PostgreSQL	React	AWS	Tailwind	Prisma	Next.Js	Nest.Js
+
+
+
+(Deep A.I. Machine learning - that helps map the learning path giving advise on the next recommended subject in the same field or that would help with what they are learning - hints and tips to help the students remember learning material {this will be implemented at a later date when the system is up and running [TBC - to be confirmed]})
+
+
+Job Search & Job advertisement - employers can upload jobs that are available with required skills needed.  Employers can search applicants and offer a job’s.  Students who obtain certificates or have uploaded recognised certified certificates can add there self to the job search.  (if the student has put there self available for (looking for work)
+
+News/blogging/articles (latest news updates, information blogs about products, community events) (availability to be paid for some articles, posting some articles will be at a paid price, some are free to post
+* Writing tech news will pay you for the service
+* Writing reviews on Sifdats manufactured and fabricated products will be a paid service
+* Advertising your products and services will be a paid service
+* Writing blogs and articles as an influencer will be free.  (If you have a big following you can receive residual income which will be paid monthly)
+
+Community (like Facebook, twitter, YouTube etc) you can stream, upload video’s, pics, links, rss
+
+Chat & messenger - under age restrictions apply to those under 13, messages will be monitored for profanity and adult content by artificial intelligence
+(Encrypted messaging system - using zero proof) - in legal emergencies this can be decrypted and provided as evidence
+
+Chatbot - help centre and Q&A
+
+GitHub Links
+
+Products catalog - 
+* 3d printers, scanners, etc (manufacturing  & fabrication)
+* Music products, digital keyboards, drum machine etc
+* Robotics
+* Manufacturing machines
+* Physics lab apparatus
+* Engineering machinery
+
+Business Listing - upload your business profile so that it can be found for products or contact details.  Business upload will be limited to the technology industry.  This includes manufacturing companies and those that use mechanical or digital products
+
+Business tools
+* Business profile
+* Advertise
+* Links
+* Catalogue
+* Staff chat rooms
+* Storage and data
+* Greeting message
+* Reply message
+
+
+Access  the website through App/ dapp/ desktop app
+
+Web3 able to pay and receive funds in cryptocurrencies (will be converted at purchase)
+
+KYC and No-KYC those with KYC will benefit from the registered requirements part of the platform.  Those with no No-KYC, can still have access to some parts of the platform but will have many restrictions.  E.g.  able to watch videos like YouTube allows users.  Can read some blogs.  Can buy some products.
+
+Profile:- 
+* Settings - account, privacy, chat, notifications, storage and data, language, help centre invite
+* E-learning achievements
+* Social website links
+* KYC, GDPR
+* Banking details, crypto wallet - Account details
+* Personalised colour theme - set colours day, night, random, or colour wheel
+* Profile picture/ logo
+* Linked devices
+
+Gamify points system (points are converted into a digital asset - crypto currency) - gain points through:-
+* helping in the community
+* Selling products through e-commence or e-learn
+* Buying products through e-commence or e-learn
+* Passing e-learning courses
+* Trading NFT’s
+* Liking, following & leaving comments on profiles, video’s or products (e-commerce & e-learning)
+* Writing Any Tech News, blogs and reviews of products and services (subjected to scrutiny - positive feed back higher points)
+* Advertising your products in the community
+* Content creators - influencers
+
+Points system
+1. Linking/ following - 1
+2. Leaving comments - 2
+3. Watching videos & Advertisement - 5 points
+4. Watch spirit advertisement (seeking out the advertisement) - 10
+5. Buying/ selling (subject to change)
+6. Passing e-learning course (free - ) (Paid - )
+7. Trading NFT’s - 
+8. Writing news articles - 1000 main, 750 medium and mini, 500 mini (subject to publishing) 3 post per day max from anyone.  1 prize per entry per day
+9. Blogs - 50 a day subject to your viewings
+10. Product and service reviews (subjected to scrutiny and viewings - positive feed back higher points)
+11. Advertising products in the community - (subjected to amount of views - positive feed back higher points)
+12. Content creators - ( subjected to followings, likes, products and post)
+
+*Points system needs to be discussed with the developer
+(Under aged candidates will have there assets held until the appropriate age)
+* all candidates will have there assets: staked, minted, candidates will be added to a mining pool for additional assets, opt in for ICO’s which is done through staking (defi)
+* All interactions on the platform will be classed as POW
+Points are redeemable
+sellers can only earn a set amount of point per month
+Buys can earn discounts to use on features and future purchases (if you spend over a set amount then you can use your discount)
+
+(Points can be used to purchase discounts or products on the sifdat platform)
+
+Discount vouchers will be sent out:-
+* To sellers (Monthly, every 3 months, seasonal e.g. easter, New Years, Christmas etc)
+* Advertised through the web
+
+Able to advertise your business, buy and sell through the platform at a % (5-15%)
+Sellers can link there platforms and social accounts to there profile for buyers to find out more about them and there products and services
+
+Types of products available on the e-commerce side
+
+3D designs
+Gadgets
+Electronics
+Digital products - games, music, software, NFT’s & applications
+
+Types of products available on the e-learning side (digital learning)
+
+Digital and technical services (including engineering field)
+
+Manufacturing
+Fabrications
+Art & Design
+Coding & programming
+Digital Music production
+Etc
+
+
+Membership
+Bronze (free) - 2 uploads of courses
+Silver - 5-20 (subject to being limited and change)
+Gold - 50-100 (subject to being limited and change)
+Platinum - unlimited course upload and product upload (subject to being limited and change)
+
+What’s needed
+
+* Rss/ podcast
+* Remodelling website
+* SEO
+* User friendly interface and streamline website
+* Desktop/ mobile version
+* theme - website template Built into a theme that can be resold
+* Built on Wordpress (in it has to be built from scratch away from owned platforms then I would like a price please.  I am in no rush as I want it to be the best it can be but would like it in within 1- 3 months if possible)
+
+
+There is still room for improvements and changes but at this level it should be able to go live and then in the future it will be amended and have up dates
+
+
+Chatgpt ideas
+
+A.I + machine learning
+Personalised A.I friend for e-learning. Provides a learning roadmap,  
+Record all that is seen and said to a cloud
+
+Things needed for website
+
+Use ChatGPT to produce
+
+Digital products.
+- [ ] E-books
+- [ ] NFT
+- [ ] 3d designs
+- [ ] Software
+
+Physical products
+- [ ] Shipped directly from manufacturer 
+- [ ] Built and sold from personal company
+
+Online course’s
+- [ ] Tutors
+- [ ] Students
+- [ ] Course materials
+
+
+Blogs/ articles
+- [ ] Articles
+
+Blockchain
+- [ ] Nodes
+Okay, let me start by understanding the user's requirements for the Sifdat website. The user wants a comprehensive platform that integrates various features like AI/ML, e-commerce, e-learning, job matching, blockchain, and more. The website should be international, cloud-based, and accessible via different platforms. 
+First, I'll go through the search results to find relevant information. Webpage 1 and 3 are about SIFAT's summer programs and Ecuador projects, which don't seem directly related. Webpage 2 and 10 discuss e-commerce platforms. The user mentioned wanting something like Amazon or Shopify, so Shift4Shop and Ecwid from webpage 2 might be useful. Webpage 10's analysis of Shopify and BigCommerce could help in choosing the right e-commerce solution. 
+The AI/ML component needs to support services like personalized learning paths and chatbots. Webpages 4 and 7 discuss AI applications and trends. For example, using AI in healthcare for diagnostics (webpage 4) and agentic AI trends (webpage 7) could inform how to implement AI in e-learning and job matching. 
+E-learning features like course uploads and blockchain certificates are mentioned. Webpage 4's section on AI in education and blockchain in e-commerce (webpage 6) might provide insights. The CV builder linked to blockchain could use the same blockchain integration discussed in webpage 6 for secure certificates.
+Job search and advertisement features need geolocation and skill matching. The example job post from the user's message requires mapping skills and location, which relates to AI-driven job matching. Webpage 7's discussion on measuring AI productivity gains could be relevant here for optimizing matching algorithms.
+The points system and gamification involve converting activities into cryptocurrency. Webpage 6's trend on blockchain for secure transactions and webpage 4's mention of AI in customer experience could help structure this system. Also, webpage 10's composable commerce approach might allow integrating different services like blockchain payments.
+Website redesign and SEO are needed. Webpages 5 and 8 emphasize the importance of mobile optimization, fast loading times, and modern design. The user's request for a user-friendly interface aligns with these recommendations. Using platforms like WordPress or composable commerce solutions (webpage 10) could offer flexibility.
+For the community and chat features, AI moderation is required. Webpage 4's AI chatbots and webpage 7's generative AI for content creation might be applicable. Encrypted messaging using zero-proof could reference blockchain security from webpage 6.
+Business tools and listings need to be industry-specific. The e-commerce platforms in webpage 10, especially BigCommerce's B2B features, could support this. Membership tiers (Bronze, Silver, etc.) can be structured using subscription models discussed in webpage 6.
+Lastly, integrating Web3 and cryptocurrency payments aligns with trends in webpage 6 and 10. The KYC/No-KYC system mentioned by the user can draw from blockchain's transparency and security features highlighted in these results.
+I need to ensure all these elements are synthesized into a coherent structure, citing the relevant webpages where applicable. The answer should cover each feature the user mentioned, using the search results to provide validated strategies and technologies.
+
+Sifdat Website Architecture & Feature Integration Overview
+The Sifdat platform integrates AI/ML, e-commerce, e-learning, blockchain, and community-driven features to create a holistic ecosystem for users and businesses. Below is a detailed breakdown of its core components and how they align with industry trends and technical requirements:
+
+1. Core Infrastructure & Accessibility
+Cloud & Virtualization: Built on a scalable cloud infrastructure (e.g., AWS or Azure) with containerization (Docker/Kubernetes) for seamless deployment and updates 714.
+
+Web3 Integration:
+
+Blockchain: Certificates (e-learning), CVs, and transactions are stored on a decentralized ledger (e.g., Ethereum, Solana) for immutability.
+
+Crypto Payments: Accept payments in Bitcoin, Ethereum, or stablecoins, with automatic fiat conversion via APIs like Coinbase Commerce 1014.
+
+Access:
+
+Multi-Platform: Native apps (iOS/Android), desktop client, and dApp for Web3 users.
+
+KYC/No-KYC Tiers: KYC-verified users gain full access (e-commerce, job matching), while non-KYC users have limited content access (e.g., blogs, videos) 10.
+
+2. AI/ML-Driven Features
+Personalized Learning Paths:
+
+Deep Learning Algorithms: Analyze user progress to recommend courses (e.g., suggesting CAD courses after 3D printing modules) 7.
+
+AI Tutor: ChatGPT-powered assistant for real-time Q&A and study tips 11.
+
+Job Matching Engine:
+
+Geolocation and skill-based matching (e.g., React.js developers in London) using NLP to parse CVs and job descriptions 11.
+
+Content Moderation:
+
+AI monitors community chats for profanity/NSFW content, flagging violations for review 7.
+
+3. E-Commerce Ecosyste
+(Content truncated due to size limit. Use line ranges to read in chunks)
