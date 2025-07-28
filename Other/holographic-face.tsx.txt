@@ -1,0 +1,215 @@
+import React, { useState, useEffect } from 'react';
+import { MessageCircle, Mic, Settings, X } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { useAnimationFrame } from 'react';
+
+const HolographicFace = ({ emotion = 'neutral', speaking = false }) => {
+  const [glowIntensity, setGlowIntensity] = useState(0);
+  const [eyeState, setEyeState] = useState(1);
+  
+  // Animate glow effect
+  useEffect(() => {
+    let frame = 0;
+    const interval = setInterval(() => {
+      setGlowIntensity(Math.sin(frame * 0.05) * 0.5 + 0.5);
+      frame++;
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Blink animation
+  useEffect(() => {
+    const blinkInterval = setInterval(() => {
+      setEyeState(0);
+      setTimeout(() => setEyeState(1), 200);
+    }, 5000);
+    return () => clearInterval(blinkInterval);
+  }, []);
+
+  const getEmotionPath = () => {
+    switch (emotion) {
+      case 'happy':
+        return 'M 30 70 Q 50 80 70 70';
+      case 'sad':
+        return 'M 30 70 Q 50 60 70 70';
+      case 'surprised':
+        return 'M 30 70 Q 50 70 70 70';
+      default:
+        return 'M 30 70 Q 50 70 70 70';
+    }
+  };
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center">
+      <svg
+        viewBox="0 0 100 100"
+        className="w-64 h-64"
+      >
+        {/* Glowing effect */}
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="holoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{stopColor: '#00fff2', stopOpacity: 0.2}} />
+            <stop offset="100%" style={{stopColor: '#0066ff', stopOpacity: 0.4}} />
+          </linearGradient>
+        </defs>
+
+        {/* Face outline */}
+        <ellipse
+          cx="50"
+          cy="50"
+          rx="30"
+          ry="35"
+          fill="url(#holoGradient)"
+          stroke="#00fff2"
+          strokeWidth="0.5"
+          style={{
+            filter: 'url(#glow)',
+            opacity: 0.7 + (glowIntensity * 0.3)
+          }}
+        />
+
+        {/* Eyes */}
+        <g style={{ transform: `scaleY(${eyeState})` }}>
+          <ellipse
+            cx="35"
+            cy="45"
+            rx="5"
+            ry={3 * eyeState}
+            fill="#00fff2"
+            style={{ filter: 'url(#glow)' }}
+          />
+          <ellipse
+            cx="65"
+            cy="45"
+            rx="5"
+            ry={3 * eyeState}
+            fill="#00fff2"
+            style={{ filter: 'url(#glow)' }}
+          />
+        </g>
+
+        {/* Mouth */}
+        <path
+          d={getEmotionPath()}
+          fill="none"
+          stroke="#00fff2"
+          strokeWidth="1.5"
+          style={{
+            filter: 'url(#glow)',
+            transform: speaking ? 'scaleY(1.2)' : 'scaleY(1)'
+          }}
+        />
+
+        {/* Holographic scan lines */}
+        {Array.from({ length: 10 }).map((_, i) => (
+          <line
+            key={i}
+            x1="20"
+            y1={20 + i * 6}
+            x2="80"
+            y2={20 + i * 6}
+            stroke="#00fff2"
+            strokeWidth="0.2"
+            opacity={0.3 + (Math.sin(i + glowIntensity) * 0.2)}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+};
+
+const AssistantInterface = () => {
+  const [messages, setMessages] = useState([]);
+  const [currentEmotion, setCurrentEmotion] = useState('neutral');
+  const [speaking, setSpeaking] = useState(false);
+  const [input, setInput] = useState('');
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    
+    const newMessage = {
+      content: input,
+      type: 'user'
+    };
+    
+    setMessages([...messages, newMessage]);
+    setInput('');
+    setSpeaking(true);
+    
+    // Simulate response
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        content: 'I received your message: ' + input,
+        type: 'assistant'
+      }]);
+      setSpeaking(false);
+    }, 1000);
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-900">
+      <div className="w-1/2 flex items-center justify-center p-4">
+        <Card className="w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <HolographicFace emotion={currentEmotion} speaking={speaking} />
+        </Card>
+      </div>
+      
+      <div className="w-1/2 flex flex-col p-4">
+        <Card className="flex-grow mb-4 bg-gray-800 overflow-y-auto">
+          <div className="p-4 space-y-4">
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`flex ${
+                  msg.type === 'user' ? 'justify-end' : 'justify-start'
+                }`}
+              >
+                <div
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    msg.type === 'user'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-700 text-gray-100'
+                  }`}
+                >
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+        
+        <div className="flex gap-2">
+          <button
+            onClick={() => setSpeaking(!speaking)}
+            className="p-2 rounded-full bg-gray-700 hover:bg-gray-600"
+          >
+            <Mic className="w-5 h-5 text-gray-100" />
+          </button>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            placeholder="Type a message..."
+            className="flex-grow p-2 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={handleSend}
+            className="p-2 rounded-full bg-blue-500 hover:bg-blue-600"
+          >
+            <MessageCircle className="w-5 h-5 text-white" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AssistantInterface;

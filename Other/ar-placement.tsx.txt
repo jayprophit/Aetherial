@@ -1,0 +1,531 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Camera, X, Check, RefreshCcw, Square, WifiOff, Wifi } from 'lucide-react';
+
+const ARSpeakerPlacement = () => {
+  const [arActive, setArActive] = useState(false);
+  const [speakers, setSpeakers] = useState([]);
+  const [activeSpeaker, setActiveSpeaker] = useState(null);
+  const [coverage, setCoverage] = useState(null);
+  const [placementQuality, setPlacementQuality] = useState(0);
+  const [showInstructions, setShowInstructions] = useState(true);
+  const [permissionStatus, setPermissionStatus] = useState('pending'); // 'pending', 'granted', 'denied'
+  
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+  
+  // Available speakers to place
+  const availableSpeakers = [
+    { id: 1, name: "JBL Flip 5", brand: "JBL", type: "portable", coverageRadius: 4, power: "medium" },
+    { id: 2, name: "Bose SoundLink", brand: "Bose", type: "portable", coverageRadius: 5, power: "medium" },
+    { id: 3, name: "Sony XB33", brand: "Sony", type: "portable", coverageRadius: 5, power: "high" },
+    { id: 4, name: "UE Boom 3", brand: "Ultimate Ears", type: "portable", coverageRadius: 4, power: "medium" },
+    { id: 5, name: "Anker Soundcore", brand: "Anker", type: "portable", coverageRadius: 3, power: "low" },
+    { id: 6, name: "Marshall Emberton", brand: "Marshall", type: "portable", coverageRadius: 3, power: "medium" },
+    { id: 7, name: "Sonos Roam", brand: "Sonos", type: "portable", coverageRadius: 4, power: "medium" }
+  ];
+  
+  // Start AR camera session
+  const startAR = async () => {
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const constraints = {
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        };
+        
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          streamRef.current = stream;
+          setArActive(true);
+          setPermissionStatus('granted');
+          
+          // Hide instructions after 5 seconds
+          setTimeout(() => {
+            setShowInstructions(false);
+          }, 5000);
+        }
+      } else {
+        console.error('getUserMedia not supported');
+        setPermissionStatus('denied');
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setPermissionStatus('denied');
+    }
+  };
+  
+  // Stop AR camera session
+  const stopAR = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    
+    setArActive(false);
+    setActiveSpeaker(null);
+  };
+  
+  // Add a speaker to the scene
+  const addSpeaker = (speaker) => {
+    // Create a new speaker object with position
+    const newSpeaker = {
+      ...speaker,
+      position: {
+        x: Math.random() * 0.6 + 0.2, // Random position between 0.2-0.8 of screen width
+        y: Math.random() * 0.4 + 0.3, // Random position between 0.3-0.7 of screen height
+      },
+      rotation: Math.random() * 360, // Random rotation
+      connected: Math.random() > 0.3, // Randomly connected or not
+    };
+    
+    setSpeakers([...speakers, newSpeaker]);
+    setActiveSpeaker(newSpeaker);
+    updateCoverageMap([...speakers, newSpeaker]);
+  };
+  
+  // Remove a speaker from the scene
+  const removeSpeaker = (speakerId) => {
+    const updatedSpeakers = speakers.filter(s => s.id !== speakerId);
+    setSpeakers(updatedSpeakers);
+    setActiveSpeaker(null);
+    updateCoverageMap(updatedSpeakers);
+  };
+  
+  // Update speaker position
+  const updateSpeakerPosition = (speakerId, position) => {
+    const updatedSpeakers = speakers.map(speaker => 
+      speaker.id === speakerId ? { ...speaker, position } : speaker
+    );
+    
+    setSpeakers(updatedSpeakers);
+    updateCoverageMap(updatedSpeakers);
+  };
+  
+  // Handle speaker selection
+  const selectSpeaker = (speaker) => {
+    setActiveSpeaker(speaker.id === activeSpeaker?.id ? null : speaker);
+  };
+  
+  // Update the audio coverage map
+  const updateCoverageMap = (currentSpeakers) => {
+    if (!canvasRef.current || currentSpeakers.length === 0) {
+      setCoverage(null);
+      setPlacementQuality(0);
+      return;
+    }
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
+    
+    // Create coverage data
+    const coverageData = new Uint8ClampedArray(width * height * 4).fill(0);
+    
+    // For each speaker, calculate coverage
+    currentSpeakers.forEach(speaker => {
+      const speakerX = speaker.position.x * width;
+      const speakerY = speaker.position.y * height;
+      const radius = speaker.coverageRadius * 50; // Scale radius based on coverage value
+      
+      // Power multiplier
+      const powerMultiplier = speaker.power === 'high' ? 1.2 : 
+                            speaker.power === 'medium' ? 1.0 : 0.8;
+      
+      // Connection status affects intensity
+      const connectionFactor = speaker.connected ? 1.0 : 0.3;
+      
+      // Calculate coverage for each pixel
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          // Calculate distance from speaker
+          const dx = x - speakerX;
+          const dy = y - speakerY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          // Calculate intensity based on distance (inverse square law)
+          const adjustedRadius = radius * powerMultiplier;
+          let intensity = 0;
+          
+          if (distance < adjustedRadius) {
+            // Quadratic falloff for realistic sound propagation
+            intensity = Math.pow(1 - distance / adjustedRadius, 2) * 255 * connectionFactor;
+          }
+          
+          // Get index in coverage data array
+          const idx = (y * width + x) * 4;
+          
+          // Add this speaker's contribution (cumulative)
+          // Chose color based on intensity
+          if (intensity > 0) {
+            // Blue for low intensity
+            if (intensity < 85) {
+              coverageData[idx] = Math.min(255, coverageData[idx] + 0);
+              coverageData[idx + 1] = Math.min(255, coverageData[idx + 1] + 0);
+              coverageData[idx + 2] = Math.min(255, coverageData[idx + 2] + intensity * 3);
+            } 
+            // Green for medium intensity
+            else if (intensity < 170) {
+              coverageData[idx] = Math.min(255, coverageData[idx] + 0);
+              coverageData[idx + 1] = Math.min(255, coverageData[idx + 1] + intensity);
+              coverageData[idx + 2] = Math.min(255, coverageData[idx + 2] + intensity);
+            } 
+            // Red for high intensity
+            else {
+              coverageData[idx] = Math.min(255, coverageData[idx] + intensity);
+              coverageData[idx + 1] = Math.min(255, coverageData[idx + 1] + 0);
+              coverageData[idx + 2] = Math.min(255, coverageData[idx + 2] + 0);
+            }
+            
+            // Alpha channel
+            coverageData[idx + 3] = 128; // Semi-transparent
+          }
+        }
+      }
+    });
+    
+    // Create image data from coverage
+    const imageData = new ImageData(coverageData, width, height);
+    
+    // Draw the coverage map
+    ctx.putImageData(imageData, 0, 0);
+    
+    // Calculate placement quality score based on coverage
+    let coveredPixels = 0;
+    let optimalCoveredPixels = width * height * 0.8; // Aim for 80% coverage
+    let overlapPixels = 0;
+    
+    for (let i = 0; i < coverageData.length; i += 4) {
+      const r = coverageData[i];
+      const g = coverageData[i + 1];
+      const b = coverageData[i + 2];
+      
+      // If any color channel has intensity, pixel is covered
+      if (r > 0 || g > 0 || b > 0) {
+        coveredPixels++;
+        
+        // Check for overlap (too much intensity)
+        if (r > 200 || g > 200 || b > 200) {
+          overlapPixels++;
+        }
+      }
+    }
+    
+    // Calculate quality score (0-100)
+    const coverageScore = Math.min(100, (coveredPixels / optimalCoveredPixels) * 100);
+    const overlapPenalty = (overlapPixels / coveredPixels) * 30; // Penalty for too much overlap
+    
+    const qualityScore = Math.max(0, Math.min(100, coverageScore - overlapPenalty));
+    setPlacementQuality(Math.round(qualityScore));
+    
+    setCoverage(canvasRef.current.toDataURL());
+  };
+  
+  // Save current placement configuration
+  const savePlacement = () => {
+    // This would integrate with the main app's state
+    console.log('Saving speaker placement configuration:', speakers);
+    
+    // Mock function to return data to parent component
+    if (typeof onSavePlacement === 'function') {
+      onSavePlacement(speakers);
+    }
+    
+    // Close AR mode after saving
+    stopAR();
+  };
+  
+  // Handle touch/click to move speaker
+  const handleCanvasClick = (e) => {
+    if (!activeSpeaker) return;
+    
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    
+    // Calculate click position relative to canvas
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    
+    // Update speaker position
+    const updatedSpeakers = speakers.map(speaker => 
+      speaker.id === activeSpeaker.id 
+        ? { ...speaker, position: { x, y } } 
+        : speaker
+    );
+    
+    setSpeakers(updatedSpeakers);
+    setActiveSpeaker({ ...activeSpeaker, position: { x, y } });
+    updateCoverageMap(updatedSpeakers);
+  };
+  
+  // Init canvas when AR is active
+  useEffect(() => {
+    if (arActive && canvasRef.current) {
+      const canvas = canvasRef.current;
+      
+      // Set canvas dimensions to match video
+      const resizeCanvas = () => {
+        if (videoRef.current) {
+          canvas.width = videoRef.current.clientWidth;
+          canvas.height = videoRef.current.clientHeight;
+          updateCoverageMap(speakers);
+        }
+      };
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      return () => {
+        window.removeEventListener('resize', resizeCanvas);
+      };
+    }
+  }, [arActive, speakers]);
+  
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+  
+  return (
+    <div className="relative h-full w-full bg-gray-900 overflow-hidden">
+      {/* AR View */}
+      {arActive ? (
+        <div className="relative w-full h-full">
+          {/* Video background */}
+          <video 
+            ref={videoRef}
+            autoPlay 
+            playsInline 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          
+          {/* Coverage map overlay */}
+          <canvas 
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full pointer-events-none"
+          />
+          
+          {/* Placement overlay - transparent layer to handle touch events */}
+          <div 
+            className="absolute inset-0 w-full h-full"
+            onClick={handleCanvasClick}
+          >
+            {/* Render speakers */}
+            {speakers.map(speaker => (
+              <div 
+                key={speaker.id}
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center ${
+                  activeSpeaker?.id === speaker.id ? 'z-20' : 'z-10'
+                }`}
+                style={{
+                  left: `${speaker.position.x * 100}%`,
+                  top: `${speaker.position.y * 100}%`,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  selectSpeaker(speaker);
+                }}
+              >
+                {/* Speaker icon */}
+                <div 
+                  className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                    speaker.connected ? 'bg-indigo-600' : 'bg-gray-400'
+                  } ${
+                    activeSpeaker?.id === speaker.id ? 'ring-4 ring-white' : ''
+                  }`}
+                >
+                  {speaker.connected ? (
+                    <Wifi className="text-white" size={20} />
+                  ) : (
+                    <WifiOff className="text-white" size={20} />
+                  )}
+                </div>
+                
+                {/* Speaker name label */}
+                <div className="mt-1 px-2 py-1 bg-black bg-opacity-60 rounded-lg text-white text-xs font-medium">
+                  {speaker.name}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Control panel */}
+          <div className="absolute bottom-0 inset-x-0 bg-black bg-opacity-70 p-4">
+            {/* Instructions overlay */}
+            {showInstructions && (
+              <div className="absolute top-0 left-0 right-0 transform -translate-y-full bg-indigo-800 text-white p-3 rounded-t-lg text-sm">
+                <p className="font-medium">Tap anywhere to place the selected speaker</p>
+                <p>Position speakers to maximize audio coverage</p>
+                <button 
+                  className="absolute top-2 right-2 text-white"
+                  onClick={() => setShowInstructions(false)}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            )}
+            
+            {/* Available speakers selector */}
+            <div className="mb-4">
+              <h3 className="text-white text-sm font-medium mb-2">Available Speakers</h3>
+              <div className="flex overflow-x-auto pb-2 space-x-2">
+                {availableSpeakers
+                  .filter(s => !speakers.some(placed => placed.id === s.id))
+                  .map(speaker => (
+                    <button
+                      key={speaker.id}
+                      className="flex-shrink-0 bg-gray-800 rounded-lg p-2 text-white text-xs flex flex-col items-center"
+                      onClick={() => addSpeaker(speaker)}
+                    >
+                      <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center mb-1">
+                        <Wifi size={16} />
+                      </div>
+                      <span className="text-center">{speaker.name}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
+            
+            {/* Active speaker controls */}
+            {activeSpeaker && (
+              <div className="mb-4 p-3 bg-gray-800 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="text-white font-medium">{activeSpeaker.name}</span>
+                  <button 
+                    className="bg-red-600 text-white p-1 rounded-full"
+                    onClick={() => removeSpeaker(activeSpeaker.id)}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="mt-2 text-xs text-gray-300">
+                  <p>Coverage: {activeSpeaker.coverageRadius}m</p>
+                  <p>Power: {activeSpeaker.power}</p>
+                  <p>Status: {activeSpeaker.connected ? 'Connected' : 'Disconnected'}</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Quality indicator */}
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <span className="text-white text-sm">Placement Quality</span>
+                <div className="mt-1 bg-gray-700 h-2 w-40 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full ${
+                      placementQuality > 70 ? 'bg-green-500' : 
+                      placementQuality > 40 ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}
+                    style={{ width: `${placementQuality}%` }}
+                  />
+                </div>
+              </div>
+              <span className="text-white font-bold text-xl">{placementQuality}%</span>
+            </div>
+            
+            {/* Action buttons */}
+            <div className="flex space-x-2">
+              <button
+                className="flex-1 bg-gray-700 text-white py-2 rounded-lg flex items-center justify-center"
+                onClick={stopAR}
+              >
+                <X size={16} className="mr-2" />
+                Cancel
+              </button>
+              <button
+                className="flex-1 bg-gray-700 text-white py-2 rounded-lg flex items-center justify-center"
+                onClick={() => {
+                  setSpeakers([]);
+                  setActiveSpeaker(null);
+                  updateCoverageMap([]);
+                }}
+              >
+                <RefreshCcw size={16} className="mr-2" />
+                Reset
+              </button>
+              <button
+                className="flex-1 bg-indigo-600 text-white py-2 rounded-lg flex items-center justify-center"
+                onClick={savePlacement}
+                disabled={speakers.length === 0}
+              >
+                <Check size={16} className="mr-2" />
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* AR Start Screen */
+        <div className="flex flex-col items-center justify-center h-full p-6">
+          <h2 className="text-white text-2xl font-bold mb-4">AR Speaker Placement</h2>
+          <p className="text-gray-300 text-center mb-8">
+            Position your speakers in the room using augmented reality for optimal sound coverage.
+          </p>
+          
+          {permissionStatus === 'denied' ? (
+            <div className="bg-red-900 bg-opacity-50 p-4 rounded-lg mb-6 text-white text-center">
+              <p className="font-medium mb-2">Camera access denied</p>
+              <p className="text-sm">Please enable camera access in your browser settings to use the AR speaker placement feature.</p>
+            </div>
+          ) : null}
+          
+          <div className="space-y-4 w-full max-w-md">
+            <button
+              className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-medium flex items-center justify-center"
+              onClick={startAR}
+              disabled={permissionStatus === 'denied'}
+            >
+              <Camera size={20} className="mr-2" />
+              Start AR Placement
+            </button>
+            
+            <button
+              className="w-full bg-gray-700 text-white py-3 px-6 rounded-lg font-medium flex items-center justify-center"
+              onClick={() => {}}
+            >
+              <Square size={20} className="mr-2" />
+              Use Floor Plan Instead
+            </button>
+          </div>
+          
+          <div className="mt-8 bg-gray-800 bg-opacity-70 p-4 rounded-lg w-full max-w-md">
+            <h3 className="text-white font-medium mb-2">Features</h3>
+            <ul className="text-gray-300 text-sm space-y-2">
+              <li className="flex items-start">
+                <span className="text-indigo-400 mr-2">•</span>
+                Position speakers in your actual room using AR
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-400 mr-2">•</span>
+                Visualize audio coverage with heat maps
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-400 mr-2">•</span>
+                Get optimal placement suggestions
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-400 mr-2">•</span>
+                Save multiple room configurations
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ARSpeakerPlacement;

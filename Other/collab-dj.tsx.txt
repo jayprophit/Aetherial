@@ -1,0 +1,577 @@
+import React, { useState, useEffect } from 'react';
+import { Music, Users, Star, Clock, ChevronRight, ChevronLeft, Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, Volume2, Heart, Share2, PlusCircle, MinusCircle, MessageSquare, Wifi } from 'lucide-react';
+
+const CollaborativeDJ = () => {
+  // Party state
+  const [isHost, setIsHost] = useState(true);
+  const [partyName, setPartyName] = useState("Friday Night Mix");
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [currentTrack, setCurrentTrack] = useState(0);
+  const [volume, setVolume] = useState(80);
+  const [participants, setParticipants] = useState([
+    { id: 1, name: "You", avatar: "Y", isHost: true, speakers: 3, status: "active" },
+    { id: 2, name: "Alex Kim", avatar: "A", isHost: false, speakers: 2, status: "active" },
+    { id: 3, name: "Jordan Lee", avatar: "J", isHost: false, speakers: 1, status: "active" },
+    { id: 4, name: "Taylor Wong", avatar: "T", isHost: false, speakers: 0, status: "pending" }
+  ]);
+  
+  // Chat state
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, userId: 2, userName: "Alex Kim", message: "Great song choice!", timestamp: new Date(Date.now() - 120000) },
+    { id: 2, userId: 3, userName: "Jordan Lee", message: "Can we play some more indie tracks next?", timestamp: new Date(Date.now() - 60000) },
+    { id: 3, userId: 1, userName: "You", message: "Sure, I'll add some to the queue", timestamp: new Date(Date.now() - 30000) }
+  ]);
+  const [messageInput, setMessageInput] = useState("");
+  
+  // Queue state
+  const [queue, setQueue] = useState([
+    { id: 1, title: "Midnight City", artist: "M83", album: "Hurry Up, We're Dreaming", duration: "4:03", addedBy: "You", votes: 5, played: true },
+    { id: 2, title: "Dance Monkey", artist: "Tones and I", album: "The Kids Are Coming", duration: "3:29", addedBy: "You", votes: 3, played: false },
+    { id: 3, title: "Blinding Lights", artist: "The Weeknd", album: "After Hours", duration: "3:20", addedBy: "Alex Kim", votes: 7, played: false },
+    { id: 4, title: "bad guy", artist: "Billie Eilish", album: "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?", duration: "3:14", addedBy: "Jordan Lee", votes: 4, played: false },
+    { id: 5, title: "Don't Start Now", artist: "Dua Lipa", album: "Future Nostalgia", duration: "3:03", addedBy: "You", votes: 6, played: false },
+    { id: 6, title: "Watermelon Sugar", artist: "Harry Styles", album: "Fine Line", duration: "2:54", addedBy: "Alex Kim", votes: 2, played: false },
+    { id: 7, title: "Circles", artist: "Post Malone", album: "Hollywood's Bleeding", duration: "3:35", addedBy: "Jordan Lee", votes: 4, played: false }
+  ]);
+  
+  // UI state
+  const [activeTab, setActiveTab] = useState('queue');
+  const [showAddSong, setShowAddSong] = useState(false);
+  const [trackProgress, setTrackProgress] = useState(42);
+  
+  // Search state
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([
+    { id: 101, title: "Take On Me", artist: "a-ha", album: "Hunting High and Low", duration: "3:46" },
+    { id: 102, title: "Dreams", artist: "Fleetwood Mac", album: "Rumours", duration: "4:14" },
+    { id: 103, title: "September", artist: "Earth, Wind & Fire", album: "The Best of Earth, Wind & Fire, Vol. 1", duration: "3:35" },
+    { id: 104, title: "Dancing Queen", artist: "ABBA", album: "Arrival", duration: "3:51" },
+    { id: 105, title: "Superstition", artist: "Stevie Wonder", album: "Talking Book", duration: "4:26" }
+  ]);
+  
+  // Music service providers
+  const [musicServices, setMusicServices] = useState([
+    { id: 1, name: "Spotify", connected: true, icon: "🎵" },
+    { id: 2, name: "Apple Music", connected: false, icon: "🍎" },
+    { id: 3, name: "YouTube Music", connected: true, icon: "▶️" },
+    { id: 4, name: "Local Files", connected: true, icon: "📁" }
+  ]);
+  
+  // Simulated progress bar update
+  useEffect(() => {
+    if (isPlaying) {
+      const interval = setInterval(() => {
+        setTrackProgress(prev => {
+          const newProgress = prev + 1;
+          if (newProgress >= 100) {
+            // Go to next track when reaching 100%
+            handleSkipNext();
+            return 0;
+          }
+          return newProgress;
+        });
+      }, 1000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying]);
+  
+  // Handle play/pause
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+  
+  // Handle skip to previous track
+  const handleSkipPrevious = () => {
+    if (currentTrack > 0) {
+      setCurrentTrack(currentTrack - 1);
+      setTrackProgress(0);
+    }
+  };
+  
+  // Handle skip to next track
+  const handleSkipNext = () => {
+    const nextTrackIndex = currentTrack + 1;
+    if (nextTrackIndex < queue.length) {
+      setCurrentTrack(nextTrackIndex);
+      setTrackProgress(0);
+      
+      // Mark current track as played
+      const updatedQueue = [...queue];
+      updatedQueue[currentTrack].played = true;
+      setQueue(updatedQueue);
+    }
+  };
+  
+  // Handle voting for a track
+  const handleVote = (trackId, increment) => {
+    const updatedQueue = queue.map(track => {
+      if (track.id === trackId) {
+        return {
+          ...track,
+          votes: Math.max(0, track.votes + (increment ? 1 : -1))
+        };
+      }
+      return track;
+    });
+    
+    // Sort by votes (played tracks stay at the top)
+    const sortedQueue = [
+      ...updatedQueue.filter(t => t.played),
+      ...updatedQueue.filter(t => !t.played).sort((a, b) => b.votes - a.votes)
+    ];
+    
+    setQueue(sortedQueue);
+  };
+  
+  // Add song to queue
+  const handleAddSong = (song) => {
+    const newSong = {
+      ...song,
+      addedBy: "You",
+      votes: 1,
+      played: false
+    };
+    
+    // Add to queue and sort by votes
+    const updatedQueue = [...queue, newSong].sort((a, b) => {
+      if (a.played !== b.played) return a.played ? -1 : 1;
+      return b.votes - a.votes;
+    });
+    
+    setQueue(updatedQueue);
+    setShowAddSong(false);
+    setSearchInput("");
+  };
+  
+  // Send chat message
+  const handleSendMessage = () => {
+    if (!messageInput.trim()) return;
+    
+    const newMessage = {
+      id: chatMessages.length + 1,
+      userId: 1,
+      userName: "You",
+      message: messageInput,
+      timestamp: new Date()
+    };
+    
+    setChatMessages([...chatMessages, newMessage]);
+    setMessageInput("");
+  };
+  
+  // Format time (mm:ss)
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+  
+  // Get current track
+  const getCurrentTrack = () => {
+    return queue[currentTrack] || { title: "No track selected", artist: "", duration: "0:00" };
+  };
+  
+  // Calculate elapsed time based on progress percentage and track duration
+  const calculateElapsedTime = () => {
+    const track = getCurrentTrack();
+    if (!track) return "0:00";
+    
+    const [mins, secs] = track.duration.split(':').map(Number);
+    const totalSeconds = mins * 60 + secs;
+    const elapsedSeconds = Math.floor(totalSeconds * (trackProgress / 100));
+    
+    return formatTime(elapsedSeconds);
+  };
+  
+  // Search for songs
+  const handleSearch = (query) => {
+    setSearchInput(query);
+    
+    // In a real implementation, this would make an API call to search
+    // For now, we'll just filter the mock results
+    const filtered = searchResults.filter(song => 
+      song.title.toLowerCase().includes(query.toLowerCase()) ||
+      song.artist.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    setSearchResults(filtered.length > 0 ? filtered : searchResults);
+  };
+  
+  return (
+    <div className="flex flex-col h-full bg-gray-900 text-white overflow-hidden">
+      {/* Header */}
+      <div className="bg-indigo-900 p-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-xl font-bold">{partyName}</h1>
+            <p className="text-sm text-indigo-200">
+              {participants.filter(p => p.status === "active").length} active listeners • {
+                participants.reduce((total, p) => total + p.speakers, 0)
+              } speakers connected
+            </p>
+          </div>
+          <div className="flex space-x-2">
+            <button className="p-2 bg-indigo-700 rounded-full">
+              <Share2 size={20} />
+            </button>
+            {isHost && (
+              <button className="p-2 bg-indigo-700 rounded-full">
+                <Wifi size={20} />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      {/* Now Playing */}
+      <div className="bg-gradient-to-b from-indigo-800 to-gray-900 p-4">
+        <div className="flex items-center mb-3">
+          <div className="w-16 h-16 bg-indigo-500 rounded-lg mr-3 flex items-center justify-center">
+            <Music size={24} className="text-white" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-semibold text-lg">{getCurrentTrack().title}</h2>
+            <p className="text-sm text-gray-300">{getCurrentTrack().artist}</p>
+          </div>
+          <button className="p-2">
+            <Heart size={20} className="text-gray-400" />
+          </button>
+        </div>
+        
+        {/* Progress bar */}
+        <div className="mb-2">
+          <div className="flex justify-between text-xs text-gray-400 mb-1">
+            <span>{calculateElapsedTime()}</span>
+            <span>{getCurrentTrack().duration}</span>
+          </div>
+          <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-indigo-500 rounded-full" 
+              style={{ width: `${trackProgress}%` }}
+            />
+          </div>
+        </div>
+        
+        {/* Playback controls */}
+        <div className="flex justify-between items-center">
+          <button className="p-2 text-gray-400">
+            <Shuffle size={20} />
+          </button>
+          <div className="flex items-center space-x-3">
+            <button 
+              className="p-2 text-white"
+              onClick={handleSkipPrevious}
+            >
+              <SkipBack size={24} />
+            </button>
+            <button 
+              className="p-3 bg-indigo-600 rounded-full text-white"
+              onClick={handlePlayPause}
+            >
+              {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+            </button>
+            <button 
+              className="p-2 text-white"
+              onClick={handleSkipNext}
+            >
+              <SkipForward size={24} />
+            </button>
+          </div>
+          <button className="p-2 text-gray-400">
+            <Repeat size={20} />
+          </button>
+        </div>
+      </div>
+      
+      {/* Tabs */}
+      <div className="flex border-b border-gray-800">
+        <button 
+          className={`flex-1 py-3 text-center ${activeTab === 'queue' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-gray-400'}`}
+          onClick={() => setActiveTab('queue')}
+        >
+          Queue
+        </button>
+        <button 
+          className={`flex-1 py-3 text-center ${activeTab === 'people' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-gray-400'}`}
+          onClick={() => setActiveTab('people')}
+        >
+          People
+        </button>
+        <button 
+          className={`flex-1 py-3 text-center ${activeTab === 'chat' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-gray-400'}`}
+          onClick={() => setActiveTab('chat')}
+        >
+          Chat
+        </button>
+      </div>
+      
+      {/* Tab Content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Queue Tab */}
+        {activeTab === 'queue' && (
+          <div className="p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-medium">Up Next</h3>
+              <button 
+                className="text-sm px-3 py-1 bg-indigo-600 rounded-full flex items-center"
+                onClick={() => setShowAddSong(true)}
+              >
+                <PlusCircle size={14} className="mr-1" />
+                Add Song
+              </button>
+            </div>
+            
+            {/* Queue list */}
+            <div className="space-y-3">
+              {queue.map((track, index) => (
+                <div 
+                  key={track.id} 
+                  className={`flex items-center p-3 rounded-lg ${
+                    index === currentTrack ? 'bg-indigo-900 bg-opacity-50' : 
+                    track.played ? 'opacity-50' : ''
+                  }`}
+                >
+                  <div className="mr-3">
+                    {index === currentTrack ? (
+                      <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center">
+                        <Play size={14} />
+                      </div>
+                    ) : (
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        {index + 1}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">{track.title}</div>
+                    <div className="text-sm text-gray-400 truncate">{track.artist}</div>
+                  </div>
+                  <div className="flex flex-col items-end ml-2">
+                    <div className="text-sm">{track.duration}</div>
+                    <div className="text-xs text-gray-400">Added by {track.addedBy}</div>
+                  </div>
+                  <div className="ml-4 flex items-center space-x-2">
+                    <button 
+                      className="p-1 text-gray-400 hover:text-white"
+                      onClick={() => handleVote(track.id, false)}
+                      disabled={track.played}
+                    >
+                      <MinusCircle size={16} />
+                    </button>
+                    <span className="text-sm font-medium w-5 text-center">{track.votes}</span>
+                    <button 
+                      className="p-1 text-gray-400 hover:text-white"
+                      onClick={() => handleVote(track.id, true)}
+                      disabled={track.played}
+                    >
+                      <PlusCircle size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* People Tab */}
+        {activeTab === 'people' && (
+          <div className="p-4">
+            <h3 className="font-medium mb-4">Participants</h3>
+            <div className="space-y-3">
+              {participants.map(person => (
+                <div key={person.id} className="flex items-center p-3 bg-gray-800 bg-opacity-50 rounded-lg">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    person.isHost ? 'bg-indigo-600' : 'bg-gray-600'
+                  } mr-3`}>
+                    {person.avatar}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium flex items-center">
+                      {person.name}
+                      {person.isHost && (
+                        <span className="ml-2 text-xs bg-indigo-600 px-2 py-0.5 rounded-full">Host</span>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {person.status === "active" ? (
+                        <>{person.speakers} speaker{person.speakers !== 1 ? 's' : ''} connected</>
+                      ) : (
+                        "Pending invitation"
+                      )}
+                    </div>
+                  </div>
+                  {person.id !== 1 && ( // Not yourself
+                    <button className="p-2 text-gray-400">
+                      <MessageSquare size={18} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6">
+              <button className="w-full py-2 border border-indigo-600 text-indigo-400 rounded-lg flex items-center justify-center">
+                <PlusCircle size={18} className="mr-2" />
+                Invite Friends
+              </button>
+            </div>
+          </div>
+        )}
+        
+        {/* Chat Tab */}
+        {activeTab === 'chat' && (
+          <div className="flex flex-col h-full">
+            <div className="flex-1 p-4 overflow-y-auto">
+              {chatMessages.map(message => (
+                <div key={message.id} className={`mb-4 ${message.userId === 1 ? 'flex flex-row-reverse' : ''}`}>
+                  <div className={`max-w-3/4 ${
+                    message.userId === 1 
+                      ? 'bg-indigo-600 rounded-l-lg rounded-br-lg' 
+                      : 'bg-gray-700 rounded-r-lg rounded-bl-lg'
+                  } p-3`}>
+                    {message.userId !== 1 && (
+                      <div className="font-medium text-indigo-300 text-sm mb-1">{message.userName}</div>
+                    )}
+                    <p>{message.message}</p>
+                    <div className="text-xs text-gray-400 mt-1 text-right">
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Chat input */}
+            <div className="p-3 border-t border-gray-800">
+              <div className="flex">
+                <input
+                  type="text"
+                  className="flex-1 bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 text-white"
+                  placeholder="Type a message..."
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
+                <button 
+                  className="bg-indigo-600 rounded-r-lg px-4"
+                  onClick={handleSendMessage}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Add Song Modal */}
+      {showAddSong && (
+        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50">
+          <div className="bg-gray-800 rounded-xl w-full max-w-md p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Add a Song</h3>
+              <button 
+                className="p-1 text-gray-400"
+                onClick={() => setShowAddSong(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            {/* Music service selection */}
+            <div className="mb-4">
+              <label className="text-sm text-gray-400 mb-1 block">Music Service</label>
+              <div className="grid grid-cols-2 gap-2">
+                {musicServices.map(service => (
+                  <div 
+                    key={service.id}
+                    className={`p-2 border rounded-lg flex items-center cursor-pointer ${
+                      service.connected ? 'border-indigo-500 bg-indigo-900 bg-opacity-20' : 'border-gray-700'
+                    }`}
+                  >
+                    <span className="text-xl mr-2">{service.icon}</span>
+                    <div>
+                      <div className="font-medium text-sm">{service.name}</div>
+                      <div className="text-xs text-gray-400">
+                        {service.connected ? 'Connected' : 'Not connected'}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Search input */}
+            <div className="mb-4">
+              <label className="text-sm text-gray-400 mb-1 block">Search for a Song</label>
+              <input
+                type="text"
+                className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white"
+                placeholder="Song title, artist..."
+                value={searchInput}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </div>
+            
+            {/* Search results */}
+            <div className="mb-4">
+              <div className="text-sm text-gray-400 mb-2">Results</div>
+              <div className="max-h-60 overflow-y-auto space-y-2">
+                {searchResults.map(song => (
+                  <div 
+                    key={song.id}
+                    className="p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600"
+                    onClick={() => handleAddSong(song)}
+                  >
+                    <div className="font-medium">{song.title}</div>
+                    <div className="text-sm text-gray-400 flex justify-between">
+                      <span>{song.artist}</span>
+                      <span>{song.duration}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex justify-end">
+              <button 
+                className="px-4 py-2 bg-gray-700 text-white rounded-lg mr-2"
+                onClick={() => setShowAddSong(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
+                onClick={() => setShowAddSong(false)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// X icon component for the modal close button
+const X = ({ size = 24, className = "" }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
+export default CollaborativeDJ;

@@ -1,0 +1,102 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card } from '@/components/ui/card';
+import { Mic, MessageCircle, Settings } from 'lucide-react';
+
+const EnhancedHolographicFace = ({ emotion = 'neutral', speaking = false, intensity = 1.0 }) => {
+  const [animationState, setAnimationState] = useState({
+    glowIntensity: 0,
+    mouthOpenness: 0,
+    eyeOpenness: 1,
+    expressionProgress: 0
+  });
+
+  const [previousEmotion, setPreviousEmotion] = useState(emotion);
+
+  useEffect(() => {
+    if (previousEmotion !== emotion) {
+      setAnimationState(prev => ({ ...prev, expressionProgress: 0 }));
+      setPreviousEmotion(emotion);
+    }
+  }, [emotion, previousEmotion]);
+
+  // Animation frame handler
+  useEffect(() => {
+    let frame = 0;
+    const interval = setInterval(() => {
+      setAnimationState(prev => ({
+        glowIntensity: Math.sin(frame * 0.05) * 0.5 + 0.5,
+        mouthOpenness: speaking ? Math.sin(frame * 0.2) * 0.3 : 0,
+        eyeOpenness: Math.max(0.1, 1 + Math.sin(frame * 0.03) * 0.1),
+        expressionProgress: Math.min(1, prev.expressionProgress + 0.05)
+      }));
+      frame++;
+    }, 50);
+    return () => clearInterval(interval);
+  }, [speaking]);
+
+  const getEmotionPath = useCallback(() => {
+    const paths = {
+      happy: {
+        mouth: 'M 30 70 Q 50 80 70 70',
+        eyebrows: 'M 25 35 Q 35 32 45 35 M 55 35 Q 65 32 75 35'
+      },
+      sad: {
+        mouth: 'M 30 70 Q 50 60 70 70',
+        eyebrows: 'M 25 35 Q 35 38 45 35 M 55 35 Q 65 38 75 35'
+      },
+      surprised: {
+        mouth: 'M 35 70 Q 50 75 65 70',
+        eyebrows: 'M 25 32 Q 35 28 45 32 M 55 32 Q 65 28 75 32'
+      },
+      neutral: {
+        mouth: 'M 30 70 Q 50 70 70 70',
+        eyebrows: 'M 25 35 L 45 35 M 55 35 L 75 35'
+      }
+    };
+    
+    return paths[emotion] || paths.neutral;
+  }, [emotion]);
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center">
+      <svg
+        viewBox="0 0 100 100"
+        className="w-64 h-64"
+      >
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feSpecularLighting surfaceScale="5" specularConstant="0.75" 
+                              specularExponent="20" lighting-color="#00fff2">
+              <fePointLight x="50" y="50" z="200"/>
+            </feSpecularLighting>
+            <feComposite in="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+          </filter>
+          
+          <linearGradient id="holoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{stopColor: '#00fff2', stopOpacity: 0.2}}>
+              <animate attributeName="stop-opacity"
+                       values="0.2;0.4;0.2"
+                       dur="3s"
+                       repeatCount="indefinite"/>
+            </stop>
+            <stop offset="100%" style={{stopColor: '#0066ff', stopOpacity: 0.4}}>
+              <animate attributeName="stop-opacity"
+                       values="0.4;0.6;0.4"
+                       dur="3s"
+                       repeatCount="indefinite"/>
+            </stop>
+          </linearGradient>
+          
+          <clipPath id="faceMask">
+            <path d="M 25 20 Q 50 10 75 20 Q 90 40 75 80 Q 50 95 25 80 Q 10 40 25 20"/>
+          </clipPath>
+        </defs>
+
+        {/* Face base */}
+        <g clipPath="url(#faceMask)">
+          <rect x="0" y="0" width="100" height="100" fill="url(#holoGradient)"/>
+          
+          {/* Interference pattern */}
+          {Array.from({ length: 20 }).map((_, i) => (
+            <line
